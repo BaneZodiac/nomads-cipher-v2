@@ -1,6 +1,6 @@
 // ============================================
 // MATRIX DIGITAL GLOBE
-// Matrix-style green code characters on a 3D sphere
+// Matrix-style light orange code characters on a 3D sphere
 // ============================================
 
 const MATRIX_CHARS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ<>/{}[]|&^%$#@!';
@@ -26,8 +26,8 @@ export async function createMatrixGlobe(canvasId) {
     const c = document.createElement("canvas");
     c.width = 64; c.height = 64;
     const ctx = c.getContext("2d");
-    ctx.shadowColor = "#00ff41"; ctx.shadowBlur = 15;
-    ctx.fillStyle = "#00ff41";
+    ctx.shadowColor = "#ff9434"; ctx.shadowBlur = 15;
+    ctx.fillStyle = "#ff9434";
     ctx.font = "bold 40px Courier New, monospace";
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillText(char, 32, 32);
@@ -71,7 +71,7 @@ export async function createMatrixGlobe(canvasId) {
     if (p1.distanceTo(p2) > 2.5) continue;
     lpos.push(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
     const br = 0.1 + Math.random() * 0.2;
-    lcol.push(0, br, 0.1, 0, br, 0.1);
+    lcol.push(br, br * 0.3, 0, br, br * 0.3, 0);
   }
   const lg = new THREE.BufferGeometry();
   lg.setAttribute("position", new THREE.Float32BufferAttribute(lpos, 3));
@@ -82,13 +82,13 @@ export async function createMatrixGlobe(canvasId) {
   // Inner glow wireframe
   const glow = new THREE.Mesh(
     new THREE.SphereGeometry(4.4, 32, 32),
-    new THREE.MeshBasicMaterial({ color: 0x00ff41, transparent: true, opacity: 0.04, wireframe: true, blending: THREE.AdditiveBlending })
+    new THREE.MeshBasicMaterial({ color: 0xff9434, transparent: true, opacity: 0.04, wireframe: true, blending: THREE.AdditiveBlending })
   );
   globeGroup.add(glow);
 
   // Glow rings
   function makeRing(op) {
-    const m = new THREE.MeshBasicMaterial({ color: 0x00ff41, transparent: true, opacity: op, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false });
+    const m = new THREE.MeshBasicMaterial({ color: 0xff9434, transparent: true, opacity: op, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false });
     return new THREE.Mesh(new THREE.RingGeometry(5.2, 5.8, 64), m);
   }
   const ring1 = makeRing(0.08); ring1.rotation.x = Math.PI / 3; ring1.rotation.z = Math.PI / 5;
@@ -101,7 +101,7 @@ export async function createMatrixGlobe(canvasId) {
     const c = document.createElement("canvas");
     c.width = 32; c.height = 32;
     const ctx = c.getContext("2d");
-    ctx.fillStyle = "#00ff41"; ctx.shadowColor = "#00ff41"; ctx.shadowBlur = 8;
+    ctx.fillStyle = "#ff9434"; ctx.shadowColor = "#ff9434"; ctx.shadowBlur = 8;
     ctx.font = "bold 22px Courier New, monospace";
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillText(ch, 16, 16);
@@ -153,8 +153,8 @@ export async function createMatrixGlobe(canvasId) {
         const nc = document.createElement("canvas");
         nc.width = 64; nc.height = 64;
         const ctx = nc.getContext("2d");
-        ctx.shadowColor = "#00ff41"; ctx.shadowBlur = 12;
-        ctx.fillStyle = "#00ff41";
+        ctx.shadowColor = "#ff9434"; ctx.shadowBlur = 12;
+        ctx.fillStyle = "#ff9434";
         ctx.font = "bold 40px Courier New, monospace";
         ctx.textAlign = "center"; ctx.textBaseline = "middle";
         ctx.fillText(d.ch, 32, 32);
