@@ -124,20 +124,22 @@ export async function createMatrixGlobe(canvasId) {
   }
 
   // Mouse
-  let mx = 0, my = 0, trx = 0, try_ = 0;
-  document.addEventListener("mousemove", (e) => {
+  let mx = 0, my = 0, trx = 0, try_ = 0, rafId = null;
+  const onMouseMove = (e) => {
     mx = (e.clientX / window.innerWidth) * 2 - 1;
     my = -(e.clientY / window.innerHeight) * 2 + 1;
-  });
-  window.addEventListener("resize", () => {
+  };
+  const onResize = () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
-  });
+  };
+  document.addEventListener('mousemove', onMouseMove);
+  window.addEventListener('resize', onResize);
 
   let t = 0;
-  function animate() {
-    requestAnimationFrame(animate);
+    function animate() {
+    rafId = requestAnimationFrame(animate);
     t += 0.01;
     trx += (my * 0.5 - trx) * 0.02;
     try_ += (mx * 0.5 - try_) * 0.02;
@@ -174,5 +176,25 @@ export async function createMatrixGlobe(canvasId) {
     renderer.render(scene, camera);
   }
   animate();
-  return { dispose: () => { renderer.dispose(); charData.forEach(d => { d.mat.dispose(); if (d.mat.map) d.mat.map.dispose(); }); } };
+    return {
+    dispose: () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      document.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('resize', onResize);
+      renderer.dispose();
+      // Dispose sprites
+      charData.forEach(d => { d.mat.dispose(); if (d.mat.map) d.mat.map.dispose(); });
+      rainData.forEach(d => { d.mat.dispose(); if (d.mat.map) d.mat.map.dispose(); });
+      // Dispose meshes and geometries
+      if (glow) { glow.material.dispose(); glow.geometry.dispose(); }
+      if (ring1) { ring1.material.dispose(); ring1.geometry.dispose(); }
+      if (ring2) { ring2.material.dispose(); ring2.geometry.dispose(); }
+      if (lines) { lines.material.dispose(); lines.geometry.dispose(); }
+      // Remove all from scene
+      while(globeGroup.children.length > 0) {
+        globeGroup.remove(globeGroup.children[0]);
+      }
+      scene.remove(globeGroup);
+    }
+  };
 }
