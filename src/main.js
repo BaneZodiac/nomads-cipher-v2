@@ -1,5 +1,5 @@
 import { gsap } from 'gsap';
-import { createMatrixGlobe } from './matrixGlobe';
+import { createOrangeGlobe } from './orangeGlobe';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './style.css';
 
